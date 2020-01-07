@@ -23,32 +23,63 @@ namespace CMOConverter
             InitializeComponent();
         }
 
-        private async void Button1_Click(object sender, EventArgs e)
+        private async void Build(string[] files)
+        {
+            await new MsBuilder()
+            {
+                Logger = new TextBoxLogger()
+                {
+                    TextBox = logText
+                },
+                Inputs = files,
+                OnBuildStarted = OnStarted,
+                OnBuildFailed = OnFailed,
+                OnBuildSucceed = OnSucceed
+            }.Execute();
+        }
+
+        private void OnStarted()
+        {
+            progressBar1.InvokeIfRequired((Action)delegate
+            {
+                progressBar1.Style = ProgressBarStyle.Marquee;
+                progressBar1.Value = 0;
+                progressBar1.SetState(ModifyProgressBarColor.PBST_NORMAL);
+            });
+        }
+
+        private void OnFailed()
+        {
+            progressBar1.InvokeIfRequired((Action)delegate
+            {
+                progressBar1.Style = ProgressBarStyle.Continuous;
+                progressBar1.Value = 100;
+                progressBar1.SetState(ModifyProgressBarColor.PBST_ERROR);
+                tabControl1.SelectedTab = tabPage2;
+            });
+        }
+
+        private void OnSucceed()
+        {
+            progressBar1.InvokeIfRequired((Action)delegate
+            {
+                progressBar1.Style = ProgressBarStyle.Continuous;
+                progressBar1.Value = 100;
+                progressBar1.SetState(ModifyProgressBarColor.PBST_NORMAL);
+            });
+        }
+
+        private void Button1_Click(object sender, EventArgs e)
         {
             openFileDialog1.ShowDialog(this);
             var files = openFileDialog1.FileNames;
-            await new MsBuilder()
-            {
-                Logger = new TextBoxLogger()
-                {
-                    TextBox = logText
-                },
-                Inputs = files
-            }.Execute();
-
+            Build(files);
         }
 
-        private async void TabPage1_DragDrop(object sender, DragEventArgs e)
+        private void TabPage1_DragDrop(object sender, DragEventArgs e)
         {
             var files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
-            await new MsBuilder()
-            {
-                Logger = new TextBoxLogger()
-                {
-                    TextBox = logText
-                },
-                Inputs = files
-            }.Execute();
+            Build(files);
         }
 
         private void TabPage1_DragEnter(object sender, DragEventArgs e)
@@ -62,6 +93,17 @@ namespace CMOConverter
         {
             tabPage1.BorderStyle = BorderStyle.None;
             tabPage1.BackColor = Color.White;
+        }
+    }
+
+    public static class InvokeIfRequiredExtension
+    {
+        public static void InvokeIfRequired(this Control control, Delegate action, params object[] args)
+        {
+            if (!control.InvokeRequired)
+                action.DynamicInvoke(args);
+            else
+                control.Invoke(action, args);
         }
     }
 

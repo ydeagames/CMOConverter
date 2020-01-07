@@ -18,6 +18,10 @@ namespace CMOConverter
         public TextBoxLogger Logger;
         public string[] Inputs;
 
+        public Action OnBuildStarted = delegate { };
+        public Action OnBuildFailed = delegate { };
+        public Action OnBuildSucceed = delegate { };
+
         /// <summary>
         /// 処理を実行します。
         /// </summary>
@@ -36,40 +40,6 @@ namespace CMOConverter
             //   ・Microsoft.Build.Engine.dll
             //   ・Microsoft.Build.Framework.dll
             //
-
-            var startBuildSignal = new ManualResetEventSlim();
-            var cancelSource = new CancellationTokenSource();
-            var cancelToken = cancelSource.Token;
-
-            //
-            // 処理中をコンソールに表示するためのタスク
-            //   ビルドが開始されたタイミングでこのタスクも出力を初める
-            //
-            var showProcessingMarkTask = Task.Run(
-                async () =>
-                {
-                    startBuildSignal.Wait(cancelToken);
-
-                    do
-                    {
-                        if (cancelToken.IsCancellationRequested)
-                        {
-                            break;
-                        }
-
-                        Logger.WriteLine("変換開始");
-
-                        await Task.Delay(TimeSpan.FromSeconds(1), cancelToken);
-                        if (cancelToken.IsCancellationRequested)
-                        {
-                            break;
-                        }
-
-                        await Task.Delay(TimeSpan.FromSeconds(1), cancelToken);
-                    }
-                    while (true);
-                },
-                cancelToken);
 
             //
             // ビルドを実行するタスク
@@ -112,56 +82,44 @@ namespace CMOConverter
                         }
                     };
 
-                    Logger.WriteLine("ビルド開始....");
-
-                    startBuildSignal.Set();
-
                     //
                     // 最後にビルド実行を行ってくれるManagerオブジェクトを取得し、ビルド実行
                     //
                     var manager = BuildManager.DefaultBuildManager;
-                    var result = manager.Build(parameter, request);
-
-                    //
-                    // 結果はOverallResultプロパティで判定できる
-                    //
-                    if (result.OverallResult == BuildResultCode.Failure)
-                    {
-                        Logger.WriteLine("ビルド失敗");
-
-                        if (result.Exception != null)
-                        {
-                            //Utils.WriteLine(result.Exception.ToString());
-                            Logger.WriteLine(result.Exception.ToString());
-                            throw result.Exception;
-                        }
-
-                        throw new Exception("ビルドに失敗しました。");
-                    }
-
-                    Logger.WriteLine("ビルド終了....");
+                    return manager.Build(parameter, request);
                 });
 
             try
             {
-                await buildTask;
+                Logger.WriteLine("ビルド開始....");
+                OnBuildStarted();
 
-                try
+                var result = await buildTask;
+
+                //
+                // 結果はOverallResultプロパティで判定できる
+                //
+                if (result.OverallResult == BuildResultCode.Failure)
                 {
-                    cancelSource.Cancel();
-                    await showProcessingMarkTask;
+                    Logger.WriteLine("ビルド失敗");
+                    OnBuildFailed();
+
+                    if (result.Exception != null)
+                    {
+                        Logger.WriteLine(result.Exception.ToString());
+                        throw result.Exception;
+                    }
+
+                    return;
                 }
-                catch (TaskCanceledException)
-                {
-                    // noop
-                }
+
+                Logger.WriteLine("ビルド終了....");
+                OnBuildSucceed();
             }
             catch (Exception ex)
             {
                 Logger.WriteLine("処理中にエラーが発生しました");
                 Logger.WriteLine(ex.ToString());
-
-                cancelSource.Cancel();
 
                 return;
             }
