@@ -92,10 +92,6 @@ namespace CMOConverter
                     var item = proj.AddItem("MeshContentTask", Path.GetFullPath("CoinOld.FBX"));
                     item.SetMetadata("ContentOutput", Path.GetFullPath("CoinOld.cmo"));
 
-                    proj.SetProperty("PlatformToolset", "v140");
-                    proj.SetProperty("Configuration", "Release");
-                    proj.SetProperty("Platform", "Win32");
-
                     //
                     // ビルドリクエストを構築
                     //
