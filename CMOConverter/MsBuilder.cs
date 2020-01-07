@@ -40,11 +40,7 @@ namespace CMOConverter
             // 結果フォルダ作成
             //
             var destDir = DateTime.Now.ToString("yyyyMMddHHmmss");
-            //Utils.CreateResultDirectory(destDir);
             Directory.CreateDirectory(destDir);
-
-            //var cursorLeft = 0;
-            //var cursorTop = 0;
 
             var startBuildSignal = new ManualResetEventSlim();
             var cancelSource = new CancellationTokenSource();
@@ -66,19 +62,13 @@ namespace CMOConverter
                             break;
                         }
 
-                        //Utils.SetCursorPosition(cursorLeft, cursorTop);
-                        //Utils.Write("★★処理中★★");
-                        Logger.WriteLine("★★処理中★★");
+                        Logger.WriteLine("変換開始");
 
                         await Task.Delay(TimeSpan.FromSeconds(1), cancelToken);
                         if (cancelToken.IsCancellationRequested)
                         {
                             break;
                         }
-
-                        //Utils.SetCursorPosition(cursorLeft, cursorTop);
-                        //Utils.Write("　　　　　　　");
-                        Logger.WriteLine(".");
 
                         await Task.Delay(TimeSpan.FromSeconds(1), cancelToken);
                     }
@@ -93,33 +83,37 @@ namespace CMOConverter
                 () =>
                 {
                     //
-                    // ビルド時の構成をマップで指定
+                    // ビルド時の構成
                     //
-                    var prop = new Dictionary<string, string>();
+                    const string projectFileName = "../../../MakeCMO/MakeCMO.vcxproj";
 
-                    prop.Add("Configuration", "Debug" /*Utils.MsBuildConfiguration*/);
-                    prop.Add("Platform", "Win32" /*Utils.MsBuildPlatform*/);
+                    var proj = new ProjectInstance(projectFileName);
+
+                    var item = proj.AddItem("MeshContentTask", Path.GetFullPath("CoinOld.FBX"));
+                    item.SetMetadata("ContentOutput", Path.GetFullPath("CoinOld.cmo"));
+
+                    proj.SetProperty("PlatformToolset", "v140");
+                    proj.SetProperty("Configuration", "Release");
+                    proj.SetProperty("Platform", "Win32");
 
                     //
                     // ビルドリクエストを構築
                     //
-                    var targets = /*Utils.MsBuildTargets*/ "_MeshContentTask".Split(new[] { "," }, StringSplitOptions.None);
-                    var request = new BuildRequestData("../../../MakeCMO/MakeCMO.vcxproj" /*Utils.SlnFilePath*/, prop, null, targets, null);
-                    //var req = new BuildRequestData(new ProjectInstance(), );
+                    var request = new BuildRequestData(proj, new string[] {"_MeshContentTask"});
 
                     //
                     // ビルドパラメータを構築
                     //   パラメータ構築時にログファイル設定が行える
                     //
-                    var projCollection = new ProjectCollection();
-                    var parameter = new BuildParameters(projCollection);
-                    parameter.Loggers = new List<ILogger> { Logger };
+                    var parameter = new BuildParameters
+                    {
+                        Loggers = new List<ILogger>
+                        {
+                            Logger
+                        }
+                    };
 
-                    //Utils.Write("ビルド開始....");
                     Logger.WriteLine("ビルド開始....");
-
-                    //Interlocked.Exchange(ref cursorLeft, Utils.CursorLeft);
-                    //Interlocked.Exchange(ref cursorTop, Utils.CursorTop);
 
                     startBuildSignal.Set();
 
@@ -134,8 +128,6 @@ namespace CMOConverter
                     //
                     if (result.OverallResult == BuildResultCode.Failure)
                     {
-                        // Utils.WriteLine(string.Empty);
-                        // Utils.WriteLine("ビルド失敗");
                         Logger.WriteLine("ビルド失敗");
 
                         if (result.Exception != null)
@@ -148,8 +140,6 @@ namespace CMOConverter
                         throw new Exception("ビルドに失敗しました。");
                     }
 
-                    //Utils.WriteLine(string.Empty);
-                    //Utils.WriteLine("ビルド終了....");
                     Logger.WriteLine("ビルド終了....");
                 });
 
@@ -169,9 +159,7 @@ namespace CMOConverter
             }
             catch (Exception ex)
             {
-                //Utils.WriteLine("★★★★★ 処理中にエラーが発生しました ★★★★★");
-                //Utils.WriteLine(ex.ToString());
-                Logger.WriteLine("★★★★★ 処理中にエラーが発生しました ★★★★★");
+                Logger.WriteLine("処理中にエラーが発生しました");
                 Logger.WriteLine(ex.ToString());
 
                 cancelSource.Cancel();

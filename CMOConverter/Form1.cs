@@ -47,10 +47,7 @@ namespace CMOConverter
             {
                 Loggers = new List<ILogger>
                 {
-                    new TextBoxLogger()
-                    {
-                        TextBox = logText
-                    }
+                    new FileLogger()
                 }
             };
             var proj = new ProjectInstance(projectFileName);
