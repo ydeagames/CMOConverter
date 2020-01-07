@@ -16,6 +16,7 @@ namespace CMOConverter
     public class MsBuilder
     {
         public TextBoxLogger Logger;
+        public string[] Inputs;
 
         /// <summary>
         /// 処理を実行します。
@@ -35,12 +36,6 @@ namespace CMOConverter
             //   ・Microsoft.Build.Engine.dll
             //   ・Microsoft.Build.Framework.dll
             //
-
-            //
-            // 結果フォルダ作成
-            //
-            var destDir = DateTime.Now.ToString("yyyyMMddHHmmss");
-            Directory.CreateDirectory(destDir);
 
             var startBuildSignal = new ManualResetEventSlim();
             var cancelSource = new CancellationTokenSource();
@@ -89,8 +84,16 @@ namespace CMOConverter
 
                     var proj = new ProjectInstance(projectFileName);
 
-                    var item = proj.AddItem("MeshContentTask", Path.GetFullPath("CoinOld.FBX"));
-                    item.SetMetadata("ContentOutput", Path.GetFullPath("CoinOld.cmo"));
+                    foreach (var input in Inputs)
+                    {
+                        var inPath = Path.GetFullPath(input);
+                        var dir = Path.GetDirectoryName(inPath);
+                        var name = Path.GetFileNameWithoutExtension(inPath);
+                        var outPath = Path.Combine(dir ?? "", name + ".cmo");
+                        var item = proj.AddItem("MeshContentTask", inPath);
+                        item.SetMetadata("ContentOutput", outPath);
+                        Logger.WriteLine($"入力ファイル: {inPath}, 出力ファイル: {outPath}");
+                    }
 
                     //
                     // ビルドリクエストを構築
@@ -162,9 +165,6 @@ namespace CMOConverter
 
                 return;
             }
-
-            // 出力先をオープン
-            Process.Start(destDir);
         }
     }
 }

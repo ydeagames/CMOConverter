@@ -25,37 +25,43 @@ namespace CMOConverter
 
         private async void Button1_Click(object sender, EventArgs e)
         {
+            openFileDialog1.ShowDialog(this);
+            var files = openFileDialog1.FileNames;
             await new MsBuilder()
             {
                 Logger = new TextBoxLogger()
                 {
                     TextBox = logText
-                }
+                },
+                Inputs = files
+            }.Execute();
+
+        }
+
+        private async void TabPage1_DragDrop(object sender, DragEventArgs e)
+        {
+            var files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+            await new MsBuilder()
+            {
+                Logger = new TextBoxLogger()
+                {
+                    TextBox = logText
+                },
+                Inputs = files
             }.Execute();
         }
 
-        private void Button2_Click(object sender, EventArgs e)
+        private void TabPage1_DragEnter(object sender, DragEventArgs e)
         {
-            //var task = new MeshContentTask();
-            //task.Source = new TaskIt "E:\\softdata\\git\\CMOConverter\\MakeCMO\\star.FBX";
+            e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.All : DragDropEffects.None;
+            tabPage1.BorderStyle = BorderStyle.FixedSingle;
+            tabPage1.BackColor = Color.FromArgb(230, 247, 247);
         }
 
-        private void Button3_Click(object sender, EventArgs e)
+        private void TabPage1_DragLeave(object sender, EventArgs e)
         {
-            const string projectFileName = "../../../MakeCMO/MakeCMO.vcxproj";
-            var parameter = new BuildParameters
-            {
-                Loggers = new List<ILogger>
-                {
-                    new FileLogger()
-                }
-            };
-            var proj = new ProjectInstance(projectFileName);
-            var item = proj.AddItem("MeshContentTask", Path.GetFullPath("CoinOld.FBX"));
-            item.SetMetadata("ContentOutput", Path.GetFullPath("CoinOld.cmo"));
-            proj.SetProperty("Configuration", "Release");
-            proj.SetProperty("Platform", "Win32");
-            BuildManager.DefaultBuildManager.Build(parameter, new BuildRequestData(proj, new string[] { "_MeshContentTask" }));
+            tabPage1.BorderStyle = BorderStyle.None;
+            tabPage1.BackColor = Color.White;
         }
     }
 
