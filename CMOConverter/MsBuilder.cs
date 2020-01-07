@@ -50,45 +50,46 @@ namespace CMOConverter
                     //
                     // ビルド時の構成
                     //
-                    const string projectDirName = "Temp";
-                    const string projectFileName = "Temp/MakeCMO.vcxproj";
-                    if (Directory.Exists(projectDirName))
-                        Directory.Delete(projectDirName, true);
-                    Directory.CreateDirectory(projectDirName);
-                    File.WriteAllText(projectFileName, Resources.Proj);
-
-                    var proj = new ProjectInstance(projectFileName);
-
-                    foreach (var input in Inputs)
-                    {
-                        var inPath = Path.GetFullPath(input);
-                        var dir = Path.GetDirectoryName(inPath);
-                        var name = Path.GetFileNameWithoutExtension(inPath);
-                        var outPath = Path.Combine(dir ?? "", name + ".cmo");
-                        var item = proj.AddItem("MeshContentTask", inPath);
-                        item.SetMetadata("ContentOutput", outPath);
-                        Logger.WriteLine($"入力ファイル: {inPath}, 出力ファイル: {outPath}");
-                    }
-
-                    //
-                    // ビルドリクエストを構築
-                    //
-                    var request = new BuildRequestData(proj, new string[] { "_MeshContentTask" });
-
-                    //
-                    // ビルドパラメータを構築
-                    //   パラメータ構築時にログファイル設定が行える
-                    //
-                    var parameter = new BuildParameters
-                    {
-                        Loggers = new List<ILogger>
-                        {
-                            Logger
-                        }
-                    };
+                    var projectDirName = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+                    var projectFileName = Path.Combine(projectDirName, "MakeCMO.vcxproj");
 
                     try
                     {
+                        if (Directory.Exists(projectDirName))
+                            Directory.Delete(projectDirName, true);
+                        Directory.CreateDirectory(projectDirName);
+                        File.WriteAllText(projectFileName, Resources.Proj);
+
+                        var proj = new ProjectInstance(projectFileName);
+
+                        foreach (var input in Inputs)
+                        {
+                            var inPath = Path.GetFullPath(input);
+                            var dir = Path.GetDirectoryName(inPath);
+                            var name = Path.GetFileNameWithoutExtension(inPath);
+                            var outPath = Path.Combine(dir ?? "", name + ".cmo");
+                            var item = proj.AddItem("MeshContentTask", inPath);
+                            item.SetMetadata("ContentOutput", outPath);
+                            Logger.WriteLine($"入力ファイル: {inPath}, 出力ファイル: {outPath}");
+                        }
+
+                        //
+                        // ビルドリクエストを構築
+                        //
+                        var request = new BuildRequestData(proj, new string[] { "_MeshContentTask" });
+
+                        //
+                        // ビルドパラメータを構築
+                        //   パラメータ構築時にログファイル設定が行える
+                        //
+                        var parameter = new BuildParameters
+                        {
+                            Loggers = new List<ILogger>
+                        {
+                            Logger
+                        }
+                        };
+
                         //
                         // 最後にビルド実行を行ってくれるManagerオブジェクトを取得し、ビルド実行
                         //
