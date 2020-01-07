@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
+using CMOConverter.Properties;
 using Microsoft.Build.BuildEngine;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
@@ -50,7 +50,12 @@ namespace CMOConverter
                     //
                     // ビルド時の構成
                     //
-                    const string projectFileName = "../../../MakeCMO/MakeCMO.vcxproj";
+                    const string projectDirName = "Temp";
+                    const string projectFileName = "Temp/MakeCMO.vcxproj";
+                    if (Directory.Exists(projectDirName))
+                        Directory.Delete(projectDirName, true);
+                    Directory.CreateDirectory(projectDirName);
+                    File.WriteAllText(projectFileName, Resources.Proj);
 
                     var proj = new ProjectInstance(projectFileName);
 
@@ -68,7 +73,7 @@ namespace CMOConverter
                     //
                     // ビルドリクエストを構築
                     //
-                    var request = new BuildRequestData(proj, new string[] {"_MeshContentTask"});
+                    var request = new BuildRequestData(proj, new string[] { "_MeshContentTask" });
 
                     //
                     // ビルドパラメータを構築

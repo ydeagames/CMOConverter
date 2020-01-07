@@ -42,6 +42,7 @@ namespace CMOConverter
         {
             progressBar1.InvokeIfRequired((Action)delegate
             {
+                logText.Text = "";
                 progressBar1.Style = ProgressBarStyle.Marquee;
                 progressBar1.Value = 0;
                 progressBar1.SetState(ModifyProgressBarColor.PBST_NORMAL);
@@ -93,6 +94,25 @@ namespace CMOConverter
         {
             tabPage1.BorderStyle = BorderStyle.None;
             tabPage1.BackColor = Color.White;
+        }
+
+        private void LogText_DragDrop(object sender, DragEventArgs e)
+        {
+            var files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+            Build(files);
+        }
+
+        private void LogText_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.All : DragDropEffects.None;
+            logText.BorderStyle = BorderStyle.FixedSingle;
+            logText.BackColor = Color.FromArgb(230, 247, 247);
+        }
+
+        private void LogText_DragLeave(object sender, EventArgs e)
+        {
+            logText.BorderStyle = BorderStyle.None;
+            logText.BackColor = Color.White;
         }
     }
 

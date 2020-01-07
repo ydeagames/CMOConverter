@@ -46,7 +46,7 @@
     
     mimetype: application/x-microsoft.net.object.binary.base64
     value   : The object must be serialized with 
-            : System.Serialization.Formatters.Binary.BinaryFormatter
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
     
     mimetype: application/x-microsoft.net.object.soap.base64
@@ -60,6 +60,7 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
@@ -68,9 +69,10 @@
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="name" use="required" type="xsd:string" />
               <xsd:attribute name="type" type="xsd:string" />
               <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
@@ -85,9 +87,10 @@
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
                 <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
               <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
               <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
@@ -109,9 +112,68 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Proj" xml:space="preserve">
+    <value>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003"&gt;
+  &lt;ItemGroup Label="ProjectConfigurations"&gt;
+    &lt;ProjectConfiguration Include="Debug|Win32"&gt;
+      &lt;Configuration&gt;Debug&lt;/Configuration&gt;
+      &lt;Platform&gt;Win32&lt;/Platform&gt;
+    &lt;/ProjectConfiguration&gt;
+  &lt;/ItemGroup&gt;
+  &lt;PropertyGroup Label="Globals"&gt;
+    &lt;RootNamespace&gt;MakeCMO&lt;/RootNamespace&gt;
+    &lt;ProjectGuid&gt;{AF4F64E9-3B44-466F-B73B-4743D20BAE8B}&lt;/ProjectGuid&gt;
+    &lt;Keyword&gt;Win32Proj&lt;/Keyword&gt;
+    &lt;WindowsTargetPlatformVersion&gt;10.0.18362.0&lt;/WindowsTargetPlatformVersion&gt;
+  &lt;/PropertyGroup&gt;
+  &lt;Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" /&gt;
+  &lt;PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration"&gt;
+    &lt;ConfigurationType&gt;Application&lt;/ConfigurationType&gt;
+    &lt;UseDebugLibraries&gt;true&lt;/UseDebugLibraries&gt;
+    &lt;PlatformToolset&gt;v142&lt;/PlatformToolset&gt;
+    &lt;PreferredToolArchitecture&gt;x64&lt;/PreferredToolArchitecture&gt;
+    &lt;CharacterSet&gt;Unicode&lt;/CharacterSet&gt;
+  &lt;/PropertyGroup&gt;
+  &lt;Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" /&gt;
+  &lt;ImportGroup Label="ExtensionSettings"&gt;
+    &lt;Import Project="$(VCTargetsPath)\BuildCustomizations\ImageContentTask.props" /&gt;
+    &lt;Import Project="$(VCTargetsPath)\BuildCustomizations\MeshContentTask.props" /&gt;
+  &lt;/ImportGroup&gt;
+  &lt;ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"&gt;
+    &lt;Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" /&gt;
+  &lt;/ImportGroup&gt;
+  &lt;PropertyGroup Label="UserMacros" /&gt;
+  &lt;PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"&gt;
+    &lt;LinkIncremental&gt;true&lt;/LinkIncremental&gt;
+  &lt;/PropertyGroup&gt;
+  &lt;ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"&gt;
+    &lt;ClCompile&gt;
+      &lt;AdditionalIncludeDirectories&gt;$(ProjectDir);%(AdditionalIncludeDirectories)&lt;/AdditionalIncludeDirectories&gt;
+      &lt;PrecompiledHeader&gt;Use&lt;/PrecompiledHeader&gt;
+      &lt;PrecompiledHeaderFile&gt;pch.h&lt;/PrecompiledHeaderFile&gt;
+      &lt;WarningLevel&gt;Level4&lt;/WarningLevel&gt;
+      &lt;Optimization&gt;Disabled&lt;/Optimization&gt;
+      &lt;PreprocessorDefinitions&gt;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)&lt;/PreprocessorDefinitions&gt;
+      &lt;FloatingPointModel&gt;Fast&lt;/FloatingPointModel&gt;
+      &lt;EnableEnhancedInstructionSet&gt;StreamingSIMDExtensions2&lt;/EnableEnhancedInstructionSet&gt;
+    &lt;/ClCompile&gt;
+    &lt;Link&gt;
+      &lt;SubSystem&gt;Windows&lt;/SubSystem&gt;
+      &lt;GenerateDebugInformation&gt;true&lt;/GenerateDebugInformation&gt;
+      &lt;AdditionalDependencies&gt;d3d11.lib;dxgi.lib;dxguid.lib;uuid.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)&lt;/AdditionalDependencies&gt;
+    &lt;/Link&gt;
+  &lt;/ItemDefinitionGroup&gt;
+  &lt;Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" /&gt;
+  &lt;ImportGroup Label="ExtensionTargets"&gt;
+    &lt;Import Project="$(VCTargetsPath)\BuildCustomizations\ImageContentTask.targets" /&gt;
+    &lt;Import Project="$(VCTargetsPath)\BuildCustomizations\MeshContentTask.targets" /&gt;
+  &lt;/ImportGroup&gt;
+&lt;/Project&gt;</value>
+  </data>
 </root>

@@ -58,6 +58,7 @@
             // 
             // logText
             // 
+            this.logText.AllowDrop = true;
             this.logText.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.logText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.logText.Location = new System.Drawing.Point(3, 3);
@@ -67,6 +68,9 @@
             this.logText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.logText.Size = new System.Drawing.Size(786, 395);
             this.logText.TabIndex = 1;
+            this.logText.DragDrop += new System.Windows.Forms.DragEventHandler(this.LogText_DragDrop);
+            this.logText.DragEnter += new System.Windows.Forms.DragEventHandler(this.LogText_DragEnter);
+            this.logText.DragLeave += new System.EventHandler(this.LogText_DragLeave);
             // 
             // tabControl1
             // 
