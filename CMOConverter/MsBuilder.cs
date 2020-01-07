@@ -87,11 +87,22 @@ namespace CMOConverter
                         }
                     };
 
-                    //
-                    // 最後にビルド実行を行ってくれるManagerオブジェクトを取得し、ビルド実行
-                    //
-                    var manager = BuildManager.DefaultBuildManager;
-                    return manager.Build(parameter, request);
+                    try
+                    {
+                        //
+                        // 最後にビルド実行を行ってくれるManagerオブジェクトを取得し、ビルド実行
+                        //
+                        var manager = BuildManager.DefaultBuildManager;
+                        return manager.Build(parameter, request);
+                    }
+                    finally
+                    {
+                        //
+                        // 掃除
+                        //
+                        if (Directory.Exists(projectDirName))
+                            Directory.Delete(projectDirName, true);
+                    }
                 });
 
             try

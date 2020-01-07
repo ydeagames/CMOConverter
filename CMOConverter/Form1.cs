@@ -18,12 +18,16 @@ namespace CMOConverter
 {
     public partial class Form1 : Form
     {
-        public Form1()
+        private string[] Files;
+
+        public Form1(string[] args)
         {
             InitializeComponent();
+
+            Files = args;
         }
 
-        private async void Build(string[] files)
+        public async void Build(string[] files)
         {
             await new MsBuilder()
             {
@@ -113,6 +117,12 @@ namespace CMOConverter
         {
             logText.BorderStyle = BorderStyle.None;
             logText.BackColor = Color.White;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            if (Files.Length > 0)
+                Build(Files);
         }
     }
 
