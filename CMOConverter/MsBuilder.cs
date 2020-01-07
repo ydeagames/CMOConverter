@@ -15,7 +15,7 @@ namespace CMOConverter
 {
     public class MsBuilder
     {
-        public TextWriter Logger;
+        public TextBoxLogger Logger;
 
         /// <summary>
         /// 処理を実行します。
@@ -113,7 +113,7 @@ namespace CMOConverter
                     //
                     var projCollection = new ProjectCollection();
                     var parameter = new BuildParameters(projCollection);
-                    parameter.Loggers = new List<ILogger> { new FileLogger { /*Parameters = Utils.MsBuildLogFileName*/ } };
+                    parameter.Loggers = new List<ILogger> { Logger };
 
                     //Utils.Write("ビルド開始....");
                     Logger.WriteLine("ビルド開始....");
@@ -172,7 +172,7 @@ namespace CMOConverter
                 //Utils.WriteLine("★★★★★ 処理中にエラーが発生しました ★★★★★");
                 //Utils.WriteLine(ex.ToString());
                 Logger.WriteLine("★★★★★ 処理中にエラーが発生しました ★★★★★");
-                Logger.WriteLine(ex);
+                Logger.WriteLine(ex.ToString());
 
                 cancelSource.Cancel();
 

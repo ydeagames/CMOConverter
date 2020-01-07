@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Build.Framework;
 using Microsoft.VisualStudio.Graphics.Api;
+using Microsoft.Build.BuildEngine;
+using Microsoft.Build.Evaluation;
+using Microsoft.Build.Execution;
 
 namespace CMOConverter
 {
@@ -20,9 +23,15 @@ namespace CMOConverter
             InitializeComponent();
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private async void Button1_Click(object sender, EventArgs e)
         {
-            new MsBuilder() { Logger = new TextboxWriter() { TextBox = logText } }.Execute();
+            await new MsBuilder()
+            {
+                Logger = new TextBoxLogger()
+                {
+                    TextBox = logText
+                }
+            }.Execute();
         }
 
         private void Button2_Click(object sender, EventArgs e)
@@ -30,17 +39,46 @@ namespace CMOConverter
             //var task = new MeshContentTask();
             //task.Source = new TaskIt "E:\\softdata\\git\\CMOConverter\\MakeCMO\\star.FBX";
         }
+
+        private void Button3_Click(object sender, EventArgs e)
+        {
+            const string projectFileName = "../../../MakeCMO/MakeCMO.vcxproj";
+            var parameter = new BuildParameters
+            {
+                Loggers = new List<ILogger>
+                {
+                    new TextBoxLogger()
+                    {
+                        TextBox = logText
+                    }
+                }
+            };
+            var proj = new ProjectInstance(projectFileName);
+            var item = proj.AddItem("MeshContentTask", Path.GetFullPath("CoinOld.FBX"));
+            item.SetMetadata("ContentOutput", Path.GetFullPath("CoinOld.cmo"));
+            proj.SetProperty("Configuration", "Release");
+            proj.SetProperty("Platform", "Win32");
+            BuildManager.DefaultBuildManager.Build(parameter, new BuildRequestData(proj, new string[] { "_MeshContentTask" }));
+        }
     }
 
-    class TextboxWriter : TextWriter
+    public class TextBoxLogger : ConsoleLogger
     {
         public TextBox TextBox;
 
-        public override Encoding Encoding => Encoding.UTF8;
-
-        public override void Write(char value)
+        public TextBoxLogger() : base(LoggerVerbosity.Normal)
         {
-            TextBox.Invoke((MethodInvoker) delegate () { TextBox.Text += value; });
+            this.WriteHandler = new WriteHandler(Write);
+        }
+
+        public void Write(string text)
+        {
+            TextBox.Invoke((MethodInvoker)delegate () { TextBox.Text += text; });
+        }
+
+        public void WriteLine(string text)
+        {
+            Write(text + Environment.NewLine);
         }
     }
 }

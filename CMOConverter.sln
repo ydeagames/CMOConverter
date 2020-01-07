@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMOConverter", "CMOConverter\CMOConverter.csproj", "{2B911D89-4A7E-4ED8-A44C-3122083A44D5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MakeCMO", "MakeCMO\MakeCMO.vcxproj", "{ADE2F812-B80A-440B-9361-7C9B8F652EEE}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MakeCMO", "MakeCMO\MakeCMO.vcxproj", "{AF4F64E9-3B44-466F-B73B-4743D20BAE8B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,16 +29,15 @@ Global
 		{2B911D89-4A7E-4ED8-A44C-3122083A44D5}.Release|x64.Build.0 = Release|Any CPU
 		{2B911D89-4A7E-4ED8-A44C-3122083A44D5}.Release|x86.ActiveCfg = Release|Any CPU
 		{2B911D89-4A7E-4ED8-A44C-3122083A44D5}.Release|x86.Build.0 = Release|Any CPU
-		{ADE2F812-B80A-440B-9361-7C9B8F652EEE}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{ADE2F812-B80A-440B-9361-7C9B8F652EEE}.Debug|x64.ActiveCfg = Debug|x64
-		{ADE2F812-B80A-440B-9361-7C9B8F652EEE}.Debug|x64.Build.0 = Debug|x64
-		{ADE2F812-B80A-440B-9361-7C9B8F652EEE}.Debug|x86.ActiveCfg = Debug|Win32
-		{ADE2F812-B80A-440B-9361-7C9B8F652EEE}.Debug|x86.Build.0 = Debug|Win32
-		{ADE2F812-B80A-440B-9361-7C9B8F652EEE}.Release|Any CPU.ActiveCfg = Release|Win32
-		{ADE2F812-B80A-440B-9361-7C9B8F652EEE}.Release|x64.ActiveCfg = Release|x64
-		{ADE2F812-B80A-440B-9361-7C9B8F652EEE}.Release|x64.Build.0 = Release|x64
-		{ADE2F812-B80A-440B-9361-7C9B8F652EEE}.Release|x86.ActiveCfg = Release|Win32
-		{ADE2F812-B80A-440B-9361-7C9B8F652EEE}.Release|x86.Build.0 = Release|Win32
+		{AF4F64E9-3B44-466F-B73B-4743D20BAE8B}.Debug|Any CPU.ActiveCfg = Release|Win32
+		{AF4F64E9-3B44-466F-B73B-4743D20BAE8B}.Debug|x64.ActiveCfg = Release|Win32
+		{AF4F64E9-3B44-466F-B73B-4743D20BAE8B}.Debug|x64.Build.0 = Release|Win32
+		{AF4F64E9-3B44-466F-B73B-4743D20BAE8B}.Debug|x86.ActiveCfg = Release|Win32
+		{AF4F64E9-3B44-466F-B73B-4743D20BAE8B}.Debug|x86.Build.0 = Release|Win32
+		{AF4F64E9-3B44-466F-B73B-4743D20BAE8B}.Release|Any CPU.ActiveCfg = Release|Win32
+		{AF4F64E9-3B44-466F-B73B-4743D20BAE8B}.Release|x64.ActiveCfg = Release|Win32
+		{AF4F64E9-3B44-466F-B73B-4743D20BAE8B}.Release|x86.ActiveCfg = Release|Win32
+		{AF4F64E9-3B44-466F-B73B-4743D20BAE8B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
