@@ -18,13 +18,13 @@ namespace CMOConverter
 {
     public partial class Form1 : Form
     {
-        private string[] Files;
+        private readonly string[] _files;
 
         public Form1(string[] args)
         {
             InitializeComponent();
 
-            Files = args;
+            _files = args;
         }
 
         public async void Build(string[] files)
@@ -121,8 +121,8 @@ namespace CMOConverter
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            if (Files.Length > 0)
-                Build(Files);
+            if (_files.Length > 0)
+                Build(_files);
         }
     }
 
